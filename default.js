@@ -3,7 +3,7 @@ const AjaxForm = {
     initialize: function (afConfig) {
         let forms = document.querySelectorAll(afConfig['formSelector']);
 
-
+        // adding the necessary handlers
         forms.forEach(function (el) {
             el.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -25,7 +25,6 @@ const AjaxForm = {
             });
         });
 
-        // сбрасываем ошибки
         function resetErrors(e) {
             let elem = e.target || e;
             elem.classList.remove('error');
@@ -34,8 +33,8 @@ const AjaxForm = {
             }
         }
 
-        // функция переписанная на чистом js из оригинального файла
-        // для чего она не знаю
+        // function rewritten in pure js from the original file
+        // i don't know what this function is for
         function beforeSerialize(form, submitter) {
             let submitVarInput = form.querySelector('input[type="hidden"][name="' + submitter.name + '"]');
             if (!submitVarInput) {
@@ -47,7 +46,6 @@ const AjaxForm = {
             }
         }
 
-        // функция выполняемая перед отправкой
         function beforeSubmit(form) {
             if (typeof (afValidated) != 'undefined' && afValidated == false) {
                 return false;
@@ -57,7 +55,7 @@ const AjaxForm = {
             return true;
         }
 
-        // функция успешной отправки
+        // handler server response
         function success(response, status, xhr, form) {
             let event = new CustomEvent('af_complete', {
                 cancelable: true,
@@ -119,7 +117,6 @@ const AjaxForm = {
             }
         }
 
-        // функция отправки ajax
         function sendAjax(path, params, callback, form) {
             const request = new XMLHttpRequest();
             const url = path || document.location.href;
