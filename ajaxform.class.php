@@ -41,8 +41,8 @@ class AjaxForm
             'corePath' => $corePath,
             'assetsPath' => $assetsPath,
 
-            'frontend_css' => '[[+assetsUrl]]css/default.css',
-            'frontend_js' => '[[+assetsUrl]]js/default.js',
+            'frontend_css' => $this->modx->getOption('af_frontend_css') ?: '[[+assetsUrl]]css/default.css',
+            'frontend_js' => $this->modx->getOption('af_frontend_js') ?: '[[+assetsUrl]]js/default.js',
         ), $config);
     }
 
