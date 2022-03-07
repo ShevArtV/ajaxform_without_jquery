@@ -33,6 +33,11 @@ class AjaxForm
             'closeMessage' => $this->modx->lexicon('af_message_close_all'),
             'json_response' => true,
 
+            'fileUplodedProgressMsg' => $this->modx->lexicon('af_message_uploded_progress'),
+            'fileUplodedSuccessMsg' => $this->modx->lexicon('af_message_uploded_success'),
+            'fileUplodedErrorMsg' => $this->modx->lexicon('af_message_uploded_error'),
+            'ajaxErrorMsg' => $this->modx->lexicon('af_message_ajax_error'),
+
             'corePath' => $corePath,
             'assetsPath' => $assetsPath,
 
@@ -80,6 +85,13 @@ class AjaxForm
             'actionUrl' => str_replace('[[+assetsUrl]]', $this->config['assetsUrl'], $this->config['actionUrl']),
             'closeMessage' => $this->config['closeMessage'],
             'clearFieldsOnSuccess' => $this->config['clearFieldsOnSuccess'],
+
+            'fileUplodedProgressMsg' => $this->config['fileUplodedProgressMsg'],
+            'fileUplodedSuccessMsg' => $this->config['fileUplodedSuccessMsg'],
+            'fileUplodedErrorMsg' => $this->config['fileUplodedErrorMsg'],
+            'showUplodedProgress' => $this->config['showUplodedProgress'],
+            'ajaxErrorMsg' => $this->config['ajaxErrorMsg'],
+
             'formSelector' => "form.{$this->config['formSelector']}",
             'pageId' => !empty($this->modx->resource)
                 ? $this->modx->resource->get('id')
