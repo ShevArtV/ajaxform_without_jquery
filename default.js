@@ -2,34 +2,44 @@ class AjaxForm {
     constructor(afConfig) {
         this.forms = document.querySelectorAll(afConfig['formSelector']);
         this.clearFieldsOnSuccess = afConfig['clearFieldsOnSuccess'];
+        this.actionUrl = afConfig['actionUrl'];
+        this.pageId = afConfig['pageId'];
 
         // adding the necessary handlers
         this.forms.forEach(el => {
-            el.addEventListener('submit', e => {
-                e.preventDefault();
-                if (this.beforeSubmit(e.target)) {
-                    this.beforeSerialize(e.target, e.submitter);
-                    let params = new FormData(e.target);
-                    params.append('pageId', afConfig['pageId']);
-                    this.sendAjax(afConfig['actionUrl'], params, this.success.bind(this), e.target);
-                }
-            });
-            el.addEventListener('reset', e => {
-                if (AjaxForm.Message != 'undefined') {
-                    AjaxForm.Message.close();
-                }
-                let currentErrors = el.querySelectorAll('.error');
-                if (currentErrors.length) {
-                    currentErrors.forEach(this.resetErrors);
-                }
-            });
+            this.addHandlers(el, ['submit', 'reset'], 'Form');
         });
+    }
+
+    addHandlers(el, handlers, postfix){
+        handlers.forEach(handler => {
+            el.addEventListener(handler, this['on' + handler + postfix].bind(this));
+        });
+    }
+
+    onsubmitForm(e){
+        e.preventDefault();
+        if (this.beforeSubmit(e.target)) {
+            this.beforeSerialize(e.target, e.submitter);
+            let params = new FormData(e.target);
+            params.append('pageId', this.pageId);
+            this.sendAjax(this.actionUrl, params, this.success.bind(this), e.target);
+        }
+    }
+
+    onresetForm(e){
+        if (AjaxForm.Message != 'undefined') {
+            AjaxForm.Message.close();
+        }
+        let currentErrors = e.target.querySelectorAll('.error');
+        if (currentErrors.length) {
+            currentErrors.forEach(this.resetErrors);
+        }
     }
 
     resetErrors(e) {
         let elem = e.target || e,
             form = elem.closest('form');
-        console.log(elem);
         elem.classList.remove('error');
         if (elem.name && form.length) {
             form.querySelector('.error_' + elem.name).innerHTML = '';
@@ -57,7 +67,7 @@ class AjaxForm {
 
     // handler server response
     success(response, status, xhr, form) {
-        let event = new CustomEvent('af_complete', {
+        const event = new CustomEvent('af_complete', {
             cancelable: true,
             bubbles: true,
             detail: {response: response, status: status, xhr: xhr, form: form},
