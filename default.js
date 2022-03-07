@@ -27,10 +27,12 @@ class AjaxForm {
     }
 
     resetErrors(e) {
-        let elem = e.target || e;
+        let elem = e.target || e,
+            form = elem.closest('form');
+        console.log(elem);
         elem.classList.remove('error');
-        if (elem.name) {
-            document.querySelector('.error_' + elem.name).innerHTML = '';
+        if (elem.name && form.length) {
+            form.querySelector('.error_' + elem.name).innerHTML = '';
         }
     }
 
