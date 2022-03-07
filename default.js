@@ -38,8 +38,8 @@ class AjaxForm {
     }
 
     resetErrors(e) {
-        let elem = e.target || e,
-            form = elem.closest('form');
+        const elem = e.target || e,
+              form = elem.closest('form');
         elem.classList.remove('error');
         if (elem.name && form.length) {
             form.querySelector('.error_' + elem.name).innerHTML = '';
@@ -60,7 +60,7 @@ class AjaxForm {
     }
 
     beforeSubmit(form) {
-        let currentErrors = form.querySelectorAll('.error');
+        const currentErrors = form.querySelectorAll('.error');
         if (currentErrors.length) currentErrors.forEach(this.resetErrors);
         return true;
     }
@@ -72,7 +72,7 @@ class AjaxForm {
             bubbles: true,
             detail: {response: response, status: status, xhr: xhr, form: form},
         });
-        let cancelled = document.dispatchEvent(event);
+        const cancelled = document.dispatchEvent(event);
         if (cancelled) {
             if (!response.success) {
                 if (AjaxForm.Message != 'undefined') {
