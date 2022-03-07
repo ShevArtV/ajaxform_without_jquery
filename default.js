@@ -11,13 +11,13 @@ class AjaxForm {
         });
     }
 
-    addHandlers(el, handlers, postfix){
+    addHandlers(el, handlers, postfix) {
         handlers.forEach(handler => {
             el.addEventListener(handler, this['on' + handler + postfix].bind(this));
         });
     }
 
-    onsubmitForm(e){
+    onsubmitForm(e) {
         e.preventDefault();
         if (this.beforeSubmit(e.target)) {
             this.beforeSerialize(e.target, e.submitter);
@@ -27,7 +27,7 @@ class AjaxForm {
         }
     }
 
-    onresetForm(e){
+    onresetForm(e) {
         if (AjaxForm.Message != 'undefined') {
             AjaxForm.Message.close();
         }
@@ -39,7 +39,7 @@ class AjaxForm {
 
     resetErrors(e) {
         const elem = e.target || e,
-              form = elem.closest('form');
+            form = elem.closest('form');
         elem.classList.remove('error');
         if (elem.name && form.length) {
             form.querySelector('.error_' + elem.name).innerHTML = '';
@@ -65,7 +65,7 @@ class AjaxForm {
         return true;
     }
 
-    // handler server response
+    // handler server success response
     success(response, status, xhr, form) {
         const event = new CustomEvent('af_complete', {
             cancelable: true,
@@ -126,9 +126,19 @@ class AjaxForm {
         }
     }
 
+    // handler server error response
+    onAjaxError(request, form) {
+        if (AjaxForm.Message != 'undefined') {
+            AjaxForm.Message.error('Form was not sent! Contact the administrator.');
+        }
+        console.log(request, form);
+        form.querySelectorAll('input,textarea,select,button').forEach(el => el.disabled = true);
+    }
+
     sendAjax(path, params, callback, form) {
         const request = new XMLHttpRequest();
         const url = path || document.location.href;
+        const $this = this;
         request.open('POST', url, true);
         request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         request.responseType = 'json';
@@ -136,10 +146,9 @@ class AjaxForm {
             if (request.readyState === 4 && request.status === 200) {
                 form.querySelectorAll('input,textarea,select,button').forEach(el => el.disabled = false);
                 callback(request.response, request.response.success, request, form);
-            } else {
-                form.querySelectorAll('input,textarea,select,button').forEach(el => el.disabled = true);
             }
         });
+        request.onerror = $this.onAjaxError(request, form);
         request.send(params);
     }
 }
