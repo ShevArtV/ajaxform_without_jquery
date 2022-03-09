@@ -1,25 +1,43 @@
 class AjaxForm {
-    constructor(afConfig) {
-        this.forms = document.querySelectorAll(afConfig['formSelector']);
-        this.clearFieldsOnSuccess = afConfig['clearFieldsOnSuccess'];
+    constructor(selector, config) {
+
+        this.form = document.querySelector(selector);
+
+        if (!this.form) {
+            console.error('Form not found. Check the correctness of the selector.');
+        }
+
+        this.defaults = {
+            clearFieldsOnSuccess: true,
+            actionUrl: 'assets/components/ajaxform/action.php',
+            pageId: 1,
+            fileUplodedProgressMsg: '',
+            fileUplodedSuccessMsg: '',
+            fileUplodedErrorMsg: '',
+            ajaxErrorMsg: '',
+            showUplodedProgress: false
+        }
+
+        this.config = Object.assign({}, this.defaults, config);
+
+       /* this.clearFieldsOnSuccess = afConfig['clearFieldsOnSuccess'];
         this.actionUrl = afConfig['actionUrl'];
         this.pageId = afConfig['pageId'];
         this.fileUplodedProgressMsg = afConfig['fileUplodedProgressMsg'];
         this.fileUplodedSuccessMsg = afConfig['fileUplodedSuccessMsg'];
         this.fileUplodedErrorMsg = afConfig['fileUplodedErrorMsg'];
         this.ajaxErrorMsg = afConfig['ajaxErrorMsg'];
-        this.showUplodedProgress = afConfig['showUplodedProgress'];
+        this.showUplodedProgress = afConfig['showUplodedProgress'];*/
+
 
         // adding the necessary handlers
-        this.forms.forEach(el => {
-            this.addHandlers(el, ['submit', 'reset'], 'Form');
-        });
+        this.addHandlers(['submit', 'reset'], 'Form');
     }
 
 
-    addHandlers(el, handlers, postfix) {
+    addHandlers(handlers, postfix) {
         handlers.forEach(handler => {
-            el.addEventListener(handler, this['on' + handler + postfix].bind(this));
+            this.form.addEventListener(handler, this['on' + handler + postfix].bind(this));
         });
     }
 
@@ -29,7 +47,7 @@ class AjaxForm {
             this.beforeSerialize(e.target, e.submitter);
             let params = new FormData(e.target);
             params.append('pageId', this.pageId);
-            this.sendAjax(this.actionUrl, params, this.responseHandler.bind(this), e.target);
+            this.sendAjax(this.config.actionUrl, params, this.responseHandler.bind(this), e.target);
         }
     }
 
@@ -81,7 +99,7 @@ class AjaxForm {
         request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         request.responseType = 'json';
 
-        if (form.querySelector('input[type="file"]') && this.showUplodedProgress) {
+        if (form.querySelector('input[type="file"]') && this.config.showUplodedProgress) {
             request.upload.onprogress = function (e) {
                 $this.onUploadProgress(e, form)
             };
@@ -99,7 +117,7 @@ class AjaxForm {
                 callback(request.response, request.response.success, request, form);
             } else if(request.readyState === 4 && request.status !== 200) {
                 if (AjaxForm.Message !== 'undefined') {
-                    AjaxForm.Message.error($this.ajaxErrorMsg);
+                    AjaxForm.Message.error($this.config.ajaxErrorMsg);
                 }
             }
         });
@@ -139,7 +157,7 @@ class AjaxForm {
                 el.removeEventListener('keydown', this.resetErrors);
             }
         });
-        if (this.clearFieldsOnSuccess) {
+        if (this.config.clearFieldsOnSuccess) {
             form.reset();
         }
         //noinspection JSUnresolvedVariable
@@ -185,19 +203,19 @@ class AjaxForm {
     // File upload processing methods
     onUploadProgress(e, form) {
         if (AjaxForm.Message !== 'undefined') {
-            AjaxForm.Message.info(this.fileUplodedProgressMsg + Math.ceil(e.loaded / e.total * 100) + '%');
+            AjaxForm.Message.info(this.config.fileUplodedProgressMsg + Math.ceil(e.loaded / e.total * 100) + '%');
         }
     }
 
     onUploadFinished(e, form) {
         if (AjaxForm.Message !== 'undefined') {
-            AjaxForm.Message.success(this.fileUplodedSuccessMsg);
+            AjaxForm.Message.success(this.config.fileUplodedSuccessMsg);
         }
     }
 
     onUploadError(e, form) {
         if (AjaxForm.Message !== 'undefined') {
-            AjaxForm.Message.error(this.fileUplodedErrorMsg);
+            AjaxForm.Message.error(this.config.fileUplodedErrorMsg);
         }
     }
 }

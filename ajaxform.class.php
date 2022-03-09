@@ -44,6 +44,8 @@ class AjaxForm
             'frontend_css' => $this->modx->getOption('af_frontend_css') ?: '[[+assetsUrl]]css/default.css',
             'frontend_js' => $this->modx->getOption('af_frontend_js') ?: '[[+assetsUrl]]js/default.js',
         ), $config);
+
+        $this->config['formSelector'] = $this->config['formSelector'] .'_'. rand();
     }
 
 
@@ -97,9 +99,10 @@ class AjaxForm
                 ? $this->modx->resource->get('id')
                 : 0,
         ));
+
         $objectName = trim($objectName);
         $this->modx->regClientScript(
-            "<script type=\"text/javascript\">new {$objectName}({$config});</script>", true
+            "<script type=\"text/javascript\">new {$objectName}(\".{$this->config['formSelector']}\",{$config});</script>", true
         );
     }
 
