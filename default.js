@@ -21,16 +21,6 @@ class AjaxForm {
 
         this.config = Object.assign({}, this.defaults, config);
 
-       /* this.clearFieldsOnSuccess = afConfig['clearFieldsOnSuccess'];
-        this.actionUrl = afConfig['actionUrl'];
-        this.pageId = afConfig['pageId'];
-        this.fileUplodedProgressMsg = afConfig['fileUplodedProgressMsg'];
-        this.fileUplodedSuccessMsg = afConfig['fileUplodedSuccessMsg'];
-        this.fileUplodedErrorMsg = afConfig['fileUplodedErrorMsg'];
-        this.ajaxErrorMsg = afConfig['ajaxErrorMsg'];
-        this.showUplodedProgress = afConfig['showUplodedProgress'];*/
-
-
         // adding the necessary handlers
         this.addHandlers(['submit', 'reset'], 'Form');
     }
