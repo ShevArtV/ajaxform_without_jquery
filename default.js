@@ -16,6 +16,7 @@ class AjaxForm {
         });
     }
 
+
     addHandlers(el, handlers, postfix) {
         handlers.forEach(handler => {
             el.addEventListener(handler, this['on' + handler + postfix].bind(this));
