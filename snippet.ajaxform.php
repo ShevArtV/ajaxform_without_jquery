@@ -15,9 +15,9 @@ $AjaxForm->loadJsCss($objectName);
 
 /** @var pdoTools $pdo */
 if (class_exists('pdoTools') && $pdo = $modx->getService('pdoTools')) {
-    $content = $pdo->getChunk($tpl, $config);
+    $content = $pdo->parseChunk($tpl, $config);
 } else {
-    $content = $modx->getChunk($tpl, $config);
+    $content = $modx->parseChunk($tpl, $config);
 }
 if (empty($content)) {
     return $modx->lexicon('af_err_chunk_nf', array('name' => $tpl));
