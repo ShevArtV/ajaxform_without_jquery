@@ -5,6 +5,7 @@ class AjaxForm {
 
         if (!this.form) {
             console.error('Form not found. Check the correctness of the selector.');
+            return false;
         }
 
         this.defaults = {
