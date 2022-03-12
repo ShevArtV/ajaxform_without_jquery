@@ -26,17 +26,22 @@ if (empty($content)) {
 // Add selector to tag form
 if (preg_match('#<form.*?class=(?:"|\')(.*?)(?:"|\')#i', $content, $matches)) {
     $classes = explode(' ', $matches[1]);
+
+    if (!in_array('ajax_form', $classes)) {
+        $classes[] = 'ajax_form';
+    }
     if (!in_array($formSelector, $classes)) {
         $classes[] = $formSelector;
-        $classes = preg_replace(
-            '#class=(?:"|\')' . $matches[1] . '(?:"|\')#i',
-            'class="' . implode(' ', $classes) . '"',
-            $matches[0]
-        );
-        $content = str_ireplace($matches[0], $classes, $content);
     }
+    $classes = preg_replace(
+        '#class=(?:"|\')' . $matches[1] . '(?:"|\')#i',
+        'class="' . implode(' ', $classes) . '"',
+        $matches[0]
+    );
+    $content = str_ireplace($matches[0], $classes, $content);
+
 } else {
-    $content = str_ireplace('<form', '<form class="' . $formSelector . '"', $content);
+    $content = str_ireplace('<form', '<form class="ajax_form ' . $formSelector . '"', $content);
 }
 
 // Add method = post
