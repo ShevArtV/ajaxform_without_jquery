@@ -43,7 +43,7 @@ class AjaxForm {
     }
 
     onresetForm(e) {
-        if (AjaxForm.Message != 'undefined') {
+        if (AjaxForm.Message !== undefined) {
             AjaxForm.Message.close();
         }
         let currentErrors = e.target.querySelectorAll('.error');
@@ -107,7 +107,7 @@ class AjaxForm {
             if (request.readyState === 4 && request.status === 200) {
                 callback(request.response, request.response.success, request, form);
             } else if(request.readyState === 4 && request.status !== 200) {
-                if (AjaxForm.Message !== 'undefined') {
+                if (AjaxForm.Message !== undefined) {
                     AjaxForm.Message.error($this.config.ajaxErrorMsg);
                 }
             }
@@ -139,7 +139,7 @@ class AjaxForm {
 
     // handler server success response
     onSuccess(response, status, xhr, form) {
-        if (AjaxForm.Message !== 'undefined') {
+        if (AjaxForm.Message !== undefined) {
             AjaxForm.Message.success(response.message);
         }
 
@@ -152,7 +152,7 @@ class AjaxForm {
             form.reset();
         }
         //noinspection JSUnresolvedVariable
-        if (typeof (grecaptcha) != 'undefined') {
+        if (typeof (grecaptcha) != undefined) {
             //noinspection JSUnresolvedVariable
             grecaptcha.reset();
         }
@@ -160,7 +160,7 @@ class AjaxForm {
 
     // handler server error response
     onError(response, status, xhr, form) {
-        if (AjaxForm.Message !== 'undefined') {
+        if (AjaxForm.Message !== undefined) {
             AjaxForm.Message.error(response.message);
         }
 
@@ -193,19 +193,19 @@ class AjaxForm {
 
     // File upload processing methods
     onUploadProgress(e, form) {
-        if (AjaxForm.Message !== 'undefined') {
+        if (AjaxForm.Message !== undefined) {
             AjaxForm.Message.info(this.config.fileUplodedProgressMsg + Math.ceil(e.loaded / e.total * 100) + '%');
         }
     }
 
     onUploadFinished(e, form) {
-        if (AjaxForm.Message !== 'undefined') {
+        if (AjaxForm.Message !== undefined) {
             AjaxForm.Message.success(this.config.fileUplodedSuccessMsg);
         }
     }
 
     onUploadError(e, form) {
-        if (AjaxForm.Message !== 'undefined') {
+        if (AjaxForm.Message !== undefined) {
             AjaxForm.Message.error(this.config.fileUplodedErrorMsg);
         }
     }
