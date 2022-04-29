@@ -43,6 +43,8 @@ class AjaxForm
 
             'frontend_css' => $this->modx->getOption('af_frontend_css'),
             'frontend_js' => $this->modx->getOption('af_frontend_js'),
+            'message_handler' => $this->modx->getOption('af_message_handler') ?: 'SweetAlert2',
+            'message_handler_method' => $this->modx->getOption('af_message_handler_method') ?: 'Message',
         ), $config);
 
         $this->config['formSelector'] = $this->config['formSelector'] .'_'. rand();
