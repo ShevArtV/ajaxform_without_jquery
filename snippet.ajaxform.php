@@ -15,9 +15,9 @@ $AjaxForm->loadJsCss($objectName);
 
 /** @var pdoTools $pdo */
 if (class_exists('pdoTools') && $pdo = $modx->getService('pdoTools')) {
-    $content = $pdo->parseChunk($tpl, $config);
+    $content = $pdo->getChunk($tpl, $config);
 } else {
-    $content = $modx->parseChunk($tpl, $config);
+    $content = $modx->getChunk($tpl, $config);
 }
 if (empty($content)) {
     return $modx->lexicon('af_err_chunk_nf', array('name' => $tpl));
@@ -26,22 +26,17 @@ if (empty($content)) {
 // Add selector to tag form
 if (preg_match('#<form.*?class=(?:"|\')(.*?)(?:"|\')#i', $content, $matches)) {
     $classes = explode(' ', $matches[1]);
-
-    if (!in_array('ajax_form', $classes)) {
-        $classes[] = 'ajax_form';
-    }
     if (!in_array($formSelector, $classes)) {
         $classes[] = $formSelector;
+        $classes = preg_replace(
+            '#class=(?:"|\')' . $matches[1] . '(?:"|\')#i',
+            'class="' . implode(' ', $classes) . '"',
+            $matches[0]
+        );
+        $content = str_ireplace($matches[0], $classes, $content);
     }
-    $classes = preg_replace(
-        '#class=(?:"|\')' . $matches[1] . '(?:"|\')#i',
-        'class="' . implode(' ', $classes) . '"',
-        $matches[0]
-    );
-    $content = str_ireplace($matches[0], $classes, $content);
-
 } else {
-    $content = str_ireplace('<form', '<form class="ajax_form ' . $formSelector . '"', $content);
+    $content = str_ireplace('<form', '<form class="' . $formSelector . '"', $content);
 }
 
 // Add method = post
